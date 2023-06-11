@@ -1,0 +1,219 @@
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans&family=Grape+Nuts&family=Oxygen:wght@300&display=swap');
+    body {
+        padding: 0;
+        margin: 0;
+        background-color: #C4DDFF;
+    }
+    .container-custom {
+        padding: 0;
+        margin: 0;
+        width: 100%;
+        height: 100vh;
+    }
+    .container-custom .logout {
+        position: fixed;
+        right: -3.8rem;
+        bottom: 3rem;
+        background-color: #2b58c0;
+        border-radius: 5px 0 0px 5px;
+        transition: ease 200ms;
+    }
+    .container-custom .logout i {
+        color: whitesmoke;
+        font-size: large;
+        padding: .5rem;
+    }
+    .container-custom .logout a {
+        color: whitesmoke;
+        font-size: large;
+        padding-right: 5px;
+    }
+    .container-custom .logout:hover {
+        right: 0;
+    }
+    .container-custom .navbar-custom {
+        padding: 1rem 0;
+        background-color: #001D6E;
+        width: 100%;
+        color: whitesmoke;
+    }
+    .container-custom .navbar-custom h3 {
+        font-family: 'Grape Nuts', cursive;
+        font-size: x-large;
+    }
+    .h2 {
+        font-family: 'Oxygen', sans-serif;
+        margin-left: 2.5rem;
+        margin-top: 1rem;
+    }
+    .table-user {
+        padding: 1rem;
+        margin: 1% 1.5%;
+    }
+    .display-none {
+        display: none;
+    }
+    .table-user .custom-box .custom-card {
+        display: inline-flex;
+    }
+</style>
+<div class="container-custom">
+    <div class="logout"><i class='fas fa-angle-left'></i><a href="/log/out">Logout</a></div>
+    <div class="navbar-custom">
+        <center><h3>Grafika Cafe</h3></center>
+    </div>
+    <!-- <h2 class="h2">Halo, <%= //actor.username %>!</h2> -->
+
+    <div class="alert">
+        <%- include('./../../partials/message.ejs') %>
+    </div>
+    <div class="table-user">
+        <div class="left" style="float: left;">
+            <button style="background-color: #2b58c0; border:none; color:whitesmoke;border-radius:3px;padding:5px 10px;" data-toggle="modal" data-target="#staticBackdrop">Tambah Transaksi</button>
+        </div>
+        <div class="left" style="float: right;">
+            <input type="text" placeholder="cari" id="search">
+            <button class="searchBtn" style="background-color: #2b58c0; border:none; color:whitesmoke;border-radius:3px;padding:5px 10px;"><i class='fas fa-search'></i></button>
+        </div>
+        <br>
+        <br>
+        <div class="custom-box">
+            <% let rslt = 0 %>
+            <% data.transaction.reverse().forEach(x => { %>
+                <% if( x.actor_id == user.id ) { %>
+                <div class="custom-card mb-3" style="width: 100%;">
+                    <div class="card" style="width: 100%;">
+                        <div class="card-header" style="text-align: center; background: #2b58c0; color:white;">
+                          Transaksi Pada <%= x.date.split(' ')[0] %> | <em>jam <%= x.date.split(' ')[1].split('.')[0] %>:<%= x.date.split(' ')[1].split('.')[1] %></em>
+                        </div>
+                        <ul class="list-group list-group-flush">
+                        <% data.menu.forEach(y => { %>
+                            <% x.data.forEach(z => { %>
+                                <% if( z.menu == y.id ) { %>
+                                    <% rslt += parseInt(z.price) %>
+                                    <li class="list-group-item"><%= y.name %> <span style="float: right;"><%= z.price %></span></li>
+                                <% } %>
+                            <% }) %>
+                        <% }) %>
+                        <li class="list-group-item" style="background-color: rgb(231, 231, 231);">Total <span style="float: right;"><%= rslt %></span></li>
+                        <% rslt = 0 %>
+                        </ul>
+                      </div>
+                </div>
+                <% } %>
+            <% }) %>
+        </div>
+    </div>
+    <div class="modal" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="staticBackdropLabel">Tambah Menu</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <form action="/cashier?action=add" method="POST" id="form">
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="exampleInputEmail1">Keterangan</label>
+                    <input type="text" name="note" class="form-control" id="note" aria-describedby="emailHelp">
+                    <!-- <small id="emailHelp" class="form-text text-muted">Pastikan nama tidak terpakai.</small> -->
+                  </div>
+                  <div class="form-group plus">
+                    <div class="row row-target">
+                        <div class="col">
+                            <label for="exampleInputPassword1">Menu</label>
+                            <select name="menu" id="menu" class="form-control menu">
+                                <% data.menu.forEach(x => { %>
+                                    <option value="<%= x.id %>" data-price="<%= x.id %>-<%= x.price %>" class="opt"><%= x.name %></option>
+                                <% }) %>
+                            </select>
+                        </div>
+                        <div class="col">
+                            <label for="exampleInputPassword1">Harga</label>
+                            <input type="text" name="price1" class="form-control price1" id="price1" readonly>
+                            <input type="text" name="price" class="form-control price" id="price" style="display: none;">
+                        </div>
+                    </div>
+                  </div>
+                  <button type="button" class="btn btn-primary tambah" style="width: 100%;">Tambah</button>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                    <button type="submit" class="btn btn-primary" style="background-color: #2b58c0;">Simpan</button>
+                </div>
+            </form>
+          </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.querySelector('.logout').addEventListener('click', function(e) {
+        this.innerHTML += ``
+    })
+
+    document.querySelector('.searchBtn').addEventListener('click', function(e) {
+        document.querySelectorAll('.card-body').forEach(x => {
+            if( !x.firstElementChild.innerText.toLocaleLowerCase().includes(document.getElementById('search').value.toLocaleLowerCase()) ) {
+                x.classList.add('display-none')
+            } else {
+                x.classList.remove('display-none')
+            }
+        })
+    })
+
+    document.querySelector('.tambah').addEventListener('click', function(e) {
+        let alp = document.querySelector('.plus')
+
+        alp.innerHTML += alp.firstElementChild.outerHTML
+        
+        document.querySelectorAll('.price').forEach(x => {
+            document.querySelectorAll('.menu').forEach(y => {
+                x.value = y.firstElementChild.dataset.price.split('-')[1]
+            })
+        })
+    
+        document.querySelectorAll('.price1').forEach(x => {
+            document.querySelectorAll('.menu').forEach(y => {
+                x.value = y.firstElementChild.dataset.price.split('-')[1]
+            })
+        })
+
+        document.querySelectorAll('.menu').forEach(x => {
+        x.addEventListener('change', function(e) {
+           document.querySelectorAll('.opt').forEach(y => {
+               if( x.value == y.dataset.price.split('-')[0] ) {
+                   x.parentElement.nextElementSibling.firstElementChild.nextElementSibling.value = y.dataset.price.split('-')[1]
+                   x.parentElement.nextElementSibling.lastElementChild.value = y.dataset.price.split('-')[1]
+               }
+           })
+        })
+    })
+    })
+
+    document.querySelectorAll('.price').forEach(x => {
+        document.querySelectorAll('.menu').forEach(y => {
+            x.value = y.firstElementChild.dataset.price.split('-')[1]
+        })
+    })
+
+    document.querySelectorAll('.price1').forEach(x => {
+        document.querySelectorAll('.menu').forEach(y => {
+            x.value = y.firstElementChild.dataset.price.split('-')[1]
+        })
+    })
+    
+    document.querySelectorAll('.menu').forEach(x => {
+        x.addEventListener('change', function(e) {
+           document.querySelectorAll('.opt').forEach(y => {
+               if( x.value == y.dataset.price.split('-')[0] ) {
+                   x.parentElement.nextElementSibling.firstElementChild.nextElementSibling.value = y.dataset.price.split('-')[1]
+                   x.parentElement.nextElementSibling.lastElementChild.value = y.dataset.price.split('-')[1]
+               }
+           })
+        })
+    })
+</script>

@@ -1,0 +1,9 @@
+create table actor(id int(20) primary key, username varchar(100), password varchar(200), role varchar(100), date varchar(100));
+
+create table menu(id int(20) primary key, name varchar(100), price int(100), qty int(100), asset int(100), date varchar(100), actor_id int(20), pic varchar(50));
+
+create table transaction(id int(20) primary key, menu_id int(20), note varchar(200), data json check(JSON_VALID(data)), date varchar(100), actor_id int(20));
+
+create table log(id int(20) primary key, actor_id int(20), message varchar(200), date varchar(100), target_id int(20));
+
+create table tbl(id int(20) primary key, number int(20), status varchar(50), date varchar(100));

@@ -1,0 +1,197 @@
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans&family=Grape+Nuts&family=Oxygen:wght@300&display=swap');
+    body {
+        padding: 0;
+        margin: 0;
+        background-color: #C4DDFF;
+    }
+    .container-custom {
+        padding: 0;
+        margin: 0;
+        width: 100%;
+        height: 100vh;
+    }
+    .container-custom .logout {
+        position: fixed;
+        right: -3.8rem;
+        bottom: 3rem;
+        background-color: #2b58c0;
+        border-radius: 5px 0 0px 5px;
+        transition: ease 200ms;
+    }
+    .container-custom .logout i {
+        color: whitesmoke;
+        font-size: large;
+        padding: .5rem;
+    }
+    .container-custom .logout a {
+        color: whitesmoke;
+        font-size: large;
+        padding-right: 5px;
+    }
+    .container-custom .logout:hover {
+        right: 0;
+    }
+    .container-custom .navbar-custom {
+        padding: 1rem 0;
+        background-color: #001D6E;
+        width: 100%;
+        color: whitesmoke;
+    }
+    .container-custom .navbar-custom h3 {
+        font-family: 'Grape Nuts', cursive;
+        font-size: x-large;
+    }
+    .h2 {
+        font-family: 'Oxygen', sans-serif;
+        margin-left: 2.5rem;
+        margin-top: 1rem;
+    }
+    .table-user {
+        padding: 1rem;
+        margin: 1% 2.5%;
+    }
+    .display-none {
+        display: none;
+    }
+</style>
+<div class="container-custom">
+    <div class="logout"><i class='fas fa-angle-left'></i><a href="/log/out">Logout</a></div>
+    <div class="navbar-custom">
+        <center><h3>Grafika Cafe</h3></center>
+    </div>
+    <!-- <h2 class="h2">Halo, <%= //actor.username %>!</h2> -->
+
+    <div class="alert">
+        <%- include('./../../partials/message.ejs') %>
+    </div>
+    <div class="table-user">
+        <div class="left" style="float: left;">
+            <button style="background-color: #2b58c0; border:none; color:whitesmoke;border-radius:3px;padding:5px 10px;" data-toggle="modal" data-target="#staticBackdrop">Tambah User</button>
+            <button style="background-color: #2b58c0; border:none; color:whitesmoke;border-radius:3px;padding:5px 10px;" id="lglg">Log Aktivitas</button>
+        </div>
+        <div class="left" style="float: right;">
+            <input type="text" placeholder="cari" id="search">
+            <button class="searchBtn" style="background-color: #2b58c0; border:none; color:whitesmoke;border-radius:3px;padding:5px 10px;"><i class='fas fa-search'></i></button>
+        </div>
+        <table class="table">
+            <thead class="thead" style="background-color: #2b58c0; color: white;">
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Username</th>
+                <th scope="col">Password</th>
+                <th scope="col">Role</th>
+                <th scope="col">Tanggal Dibuat</th>
+                <th scope="col" style="width: 8rem; text-align: center;">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+                <% let i = 1 %>
+                <% data.forEach(x => { %>
+                    <tr class="obj" style="border-bottom: solid 1px #001D6E;">
+                      <th scope="row"><%= i++ %></th>
+                      <td><%= x.username %></td>
+                      <td><%= x.password %></td>
+                      <td><%= x.role %></td>
+                      <td><%= x.date %></td>
+                      <td class="act">
+                          <center>
+                            <div data-id="<%= x.id %>" data-action="update" style="display: inline-block; margin: 0 10px;">
+                                <i class='fas fa-pen' style="color: black; cursor: pointer; font-size: x-large;" data-toggle="modal" data-target="#staticBackdrop"></i>
+                            </div>
+                            <div data-id="<%= x.id %>" data-action="delete" style="display: inline-block; margin: 0 10px;">
+                                <i class='fas fa-trash' style="color: red; cursor: pointer; font-size: x-large;"></i>
+                            </div>
+                          </center>
+                      </td>
+                    </tr>
+                <% }) %>
+            </tbody>
+          </table>
+    </div>
+    <div class="modal" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="staticBackdropLabel">Tambah User</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <form action="/admin?action=add" method="POST" id="form">
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="exampleInputEmail1">Username</label>
+                    <input type="text" name="username" class="form-control" id="username" aria-describedby="emailHelp">
+                    <small id="emailHelp" class="form-text text-muted">Pastikan username tidak terpakai.</small>
+                  </div>
+                  <div class="form-group">
+                    <label for="exampleInputPassword1">Password</label>
+                    <input type="password" name="password" class="form-control" id="password">
+                  </div>
+                  <div class="form-group">
+                    <label for="exampleInputPassword1">Role</label>
+                    <select name="role" class="form-control form-control-sm" id="role">
+                        <option value="kasir">Kasir</option>
+                        <option value="manager">Manager</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                    <button type="submit" class="btn btn-primary" style="background-color: #2b58c0;">Simpan</button>
+                </div>
+            </form>
+          </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('lglg').addEventListener('click', function(e) {
+        window.location.href = '/admin/log'
+    })
+    document.querySelector('.logout').addEventListener('click', function(e) {
+        this.innerHTML += ``
+    })
+
+    document.querySelectorAll('.act div i').forEach(x => {
+        x.addEventListener('click', function(e) {
+            if( x.parentElement.dataset.action == 'delete' ) {
+                let alp = confirm('Apakah anda yakin?')
+                if( alp == true ) {
+                    form.setAttribute('action', '/admin?action=del&id=' + x.parentElement.dataset.id)
+                    document.getElementById('form').submit()
+                }
+            }
+            if( x.parentElement.dataset.action == 'update' ) {
+                form.setAttribute('action', '/admin?action=edit&id=' + x.parentElement.dataset.id)
+                document.getElementById('username').value = x.parentElement.parentElement.parentElement.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling.innerText
+                document.getElementById('password').value = x.parentElement.parentElement.parentElement.previousElementSibling.previousElementSibling.previousElementSibling.innerText
+                
+                document.querySelectorAll('#role option').forEach(y => {
+                    if( y.value == x.parentElement.parentElement.parentElement.previousElementSibling.previousElementSibling.innerText ) {
+                        y.setAttribute('selected', '')
+                    }
+                })
+            }
+        })
+    })
+
+    document.querySelectorAll('.obj').forEach(x => {
+        if( parseInt(x.firstElementChild.innerText)%2 == 0 ) {
+            x.style.backgroundColor = '#ffff'
+        }
+    })
+
+    document.querySelector('.searchBtn').addEventListener('click', function(e) {
+        document.querySelectorAll('.obj').forEach(x => {
+            if( !x.firstElementChild.nextElementSibling.innerText.toLocaleLowerCase().includes(document.getElementById('search').value.toLocaleLowerCase()) ) {
+                x.classList.add('display-none')
+            } else {
+                x.classList.remove('display-none')
+            }
+        })
+    })
+</script>

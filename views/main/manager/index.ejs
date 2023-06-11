@@ -1,0 +1,279 @@
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans&family=Grape+Nuts&family=Oxygen:wght@300&display=swap');
+    body {
+        padding: 0;
+        margin: 0;
+        background-color: #C4DDFF;
+    }
+    .container-custom {
+        padding: 0;
+        margin: 0;
+        width: 100%;
+        height: 100vh;
+    }
+    .container-custom .logout {
+        position: fixed;
+        right: -3.8rem;
+        bottom: 3rem;
+        background-color: #2b58c0;
+        border-radius: 5px 0 0px 5px;
+        transition: ease 200ms;
+        z-index: 1;
+    }
+    .container-custom .logout i {
+        color: whitesmoke;
+        font-size: large;
+        padding: .5rem;
+    }
+    .container-custom .logout a {
+        color: whitesmoke;
+        font-size: large;
+        padding-right: 5px;
+    }
+    .container-custom .logout:hover {
+        right: 0;
+    }
+    .container-custom .navbar-custom {
+        padding: 1rem 0;
+        background-color: #001D6E;
+        width: 100%;
+        color: whitesmoke;
+    }
+    .container-custom .navbar-custom h3 {
+        font-family: 'Grape Nuts', cursive;
+        font-size: x-large;
+    }
+    .h2 {
+        font-family: 'Oxygen', sans-serif;
+        margin-left: 2.5rem;
+        margin-top: 1rem;
+    }
+    .table-user {
+        padding: 1rem;
+        margin: 1% 1.5%;
+    }
+    .display-none {
+        display: none;
+    }
+    .table-user .custom-box .custom-card {
+        display: inline-block;
+        margin: 5px 0;
+    }
+</style>
+<div class="container-custom">
+    <div class="logout"><i class='fas fa-angle-left'></i><a href="/log/out">Logout</a></div>
+    <div class="navbar-custom">
+        <center><h3>Grafika Cafe</h3></center>
+    </div>
+    <!-- <h2 class="h2">Halo, <%= //actor.username %>!</h2> -->
+
+    <div class="alert">
+        <%- include('./../../partials/message.ejs') %>
+    </div>
+    <div class="table-user">
+        <div class="left" style="float: left;">
+            <button style="background-color: #2b58c0; border:none; color:whitesmoke;border-radius:3px;padding:5px 10px;" data-toggle="modal" data-target="#staticBackdrop">Tambah Menu</button>
+        </div>
+        <div class="left" style="float: left; margin-left: 10px;">
+            <input type="text" placeholder="cari" id="search">
+            <button class="searchBtn" style="background-color: #2b58c0; border:none; color:whitesmoke;border-radius:3px;padding:5px 10px;"><i class='fas fa-search'></i></button>
+        </div>
+        <div class="right" style="float: right;">
+            <button style="background-color: #2b58c0; border:none; color:whitesmoke;border-radius:3px;padding:5px 10px;" data-toggle="modal" data-target="#staticBackdrop1">Tambah Meja</button>
+            <button style="background-color: #2b58c0; border:none; color:whitesmoke;border-radius:3px;padding:5px 10px;" data-toggle="modal" data-target="#staticBackdrop2">Hapus Meja</button>
+        </div>
+        <br>
+        <br>
+        <div class="row">
+            <div class="col col-lg-9">
+                <div class="custom-box">
+                    <% data.menu.forEach(x => { %>
+                        <div class="custom-card">
+                            <div class="card-deck">
+                                <div class="card" data-id="<%= x.id %>" data-pic="<%= x.pic_id %>">
+                                  <img src="../data/pic-menu/<%= x.pic_id %>.png" class="card-img-top" style="width: 18rem; height: 10rem;">
+                                  <div class="card-body cbd-custom">
+                                    <h5 class="card-title"><%= x.name %></h5>
+                                    <p class="card-text">Harga Jual: <em><%= x.price %></em></p>
+                                  </div>
+                                  <div class="card-footer">
+                                    <!-- <small class="text-muted">Last updated 3 mins ago</small> -->
+                                    <a href="#" class="card-link" data-toggle="modal" data-target="#staticBackdrop">Edit</a>
+                                    <a href="#" class="card-link" data-toggle="modal" data-target="#staticBackdrop3">Delete</a>
+                                  </div>
+                                </div>
+                            </div>
+                        </div>
+                    <% }) %>
+                </div>
+            </div>
+            <div class="col">
+                <div class="custom-box" style="text-align: right;">
+                    <% data.tbl.forEach(x => { %>
+                        <div class="custom-card">
+                            <div class="card" data-id="<%= x.id %>" style="text-align: center; width: 5rem;">
+                                <div class="card-body">
+                                    <!-- <span class="list-table-close" data-id="<%= x.id %>" style="cursor: pointer; position: absolute; top: -2.5px; right: 5px; transform: scale(1.25);" data-toggle="modal" data-target="#staticBackdrop2">&times;</span> -->
+                                    <h5 class="card-title" style="margin-top: 5px;"><%= x.number %></h5>
+                                </div>
+                              </div>
+                        </div>
+                    <% }) %>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="staticBackdropLabel">Tambah Menu</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <form action="/manager?action=add" method="POST" id="form-menu">
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="exampleInputEmail1">Gambar</label>
+                    <!-- <input type="file" class="form-control" id="file" aria-describedby="emailHelp">
+                    <input type="text" name="pic" id="pic" class="display-none"> -->
+                    <div class="custom-file">
+                        <input type="file" class="custom-file-input" id="file" aria-describedby="inputGroupFileAddon01">
+                        <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+                        <input type="text" name="pic" id="pic" class="display-none">
+                      </div>
+                  </div>
+                <div class="form-group">
+                    <label for="exampleInputEmail1">Nama</label>
+                    <input type="text" name="name" class="form-control" id="name" aria-describedby="emailHelp">
+                    <small id="emailHelp" class="form-text text-muted">Pastikan nama menu tidak terpakai.</small>
+                  </div>
+                  <div class="form-group">
+                    <div class="row">
+                        <div class="col">
+                            <label for="exampleInputPassword1">Harga Jual</label>
+                            <input type="text" name="price" class="form-control" id="price">
+                        </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                    <button type="submit" class="btn btn-primary" style="background-color: #2b58c0;">Simpan</button>
+                </div>
+            </form>
+          </div>
+        </div>
+    </div>
+    <div class="modal" id="staticBackdrop1" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="staticBackdropLabel">Tambah Meja</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <form action="/manager?action=add&table=true" method="POST" id="form">
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-primary" style="background-color: #2b58c0;">Lanjut</button>
+                </div>
+            </form>
+          </div>
+        </div>
+    </div>
+    <div class="modal" id="staticBackdrop2" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="staticBackdropLabel">Hapus Meja</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <form action="/manager?action=del&table=true" method="POST" id="form-del-tbl">
+                <div class="modal-footer">
+                    <input type="text" name="id" id="id-tbl-del" class="display-none">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-primary" style="background-color: #2b58c0;">Lanjut</button>
+                </div>
+            </form>
+          </div>
+        </div>
+    </div>
+    <div class="modal" id="staticBackdrop3" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="staticBackdropLabel">Hapus Menu</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <form action="/manager?action=del" method="POST" id="form-del-menu">
+                <div class="modal-footer">
+                    <input type="text" name="id" id="id-menu-del" class="display-none">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-primary" style="background-color: #2b58c0;">Lanjut</button>
+                </div>
+            </form>
+          </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.querySelector('.logout').addEventListener('click', function(e) {
+        this.innerHTML += ``
+    })
+
+    document.querySelector('#file').addEventListener('change', function(e) {
+        let file = this.files.item(0)
+        let type = file.type.split('/')[1]
+        if( type.toLocaleLowerCase() == 'png' || type.toLocaleLowerCase() == 'jpg' || type.toLocaleLowerCase() == 'jpeg' ) {
+            if( document.querySelector('#red-mark') != null ) this.parentElement.lastElementChild.remove()
+            document.querySelector('#pic').value = file.path
+            document.querySelector('.custom-file-label').innerText = file.name
+        } else {
+            this.files == null
+            this.value == ''
+            this.parentElement.innerHTML += '<small id="red-mark" class="form-text alert-file" style="color: red;">File harus berupa .png .jpg .jpeg</small>'
+        }
+    })
+
+    document.querySelectorAll('.list-table-close').forEach(x => {
+        x.addEventListener('click', function(e) {
+            document.querySelector('#form-del-tbl').firstElementChild.firstElementChild.value = this.dataset.id
+        })
+    })
+
+    document.querySelectorAll('.card .cbd-custom').forEach(x => {
+        x.nextElementSibling.lastElementChild.previousElementSibling.addEventListener('click', function(e) {
+            document.querySelector('#form-menu').setAttribute('action', '/manager?action=edit&id=' + x.parentElement.dataset.id + '&pic=' + x.parentElement.dataset.pic)
+            document.getElementById('name').value = x.firstElementChild.innerText
+            document.getElementById('price').value = x.firstElementChild.nextElementSibling.lastElementChild.innerText
+        })
+        x.nextElementSibling.lastElementChild.addEventListener('click', function(e) {
+            document.querySelector('#form-del-menu').setAttribute('action', `/manager?action=del&pic=${x.parentElement.dataset.pic}`)
+            document.querySelector('#id-menu-del').value = x.parentElement.dataset.id
+            // let alp = confirm('Apakah anda yakin?')
+            // if( alp == true ) {
+            //     form.setAttribute('action', '/manager?action=del&id=' + x.parentElement.dataset.id)
+            //     document.getElementById('form').submit()
+            // }
+        })
+    })
+
+
+    document.querySelector('.searchBtn').addEventListener('click', function(e) {
+        document.querySelectorAll('.cbd-custom').forEach(x => {
+            if( !x.firstElementChild.innerText.toLocaleLowerCase().includes(document.getElementById('search').value.toLocaleLowerCase()) ) {
+                x.parentElement.classList.add('display-none')
+            } else {
+                x.parentElement.classList.remove('display-none')
+            }
+        })
+    })
+</script>

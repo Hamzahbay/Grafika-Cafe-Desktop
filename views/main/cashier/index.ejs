@@ -1,0 +1,283 @@
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans&family=Grape+Nuts&family=Oxygen:wght@300&display=swap');
+    body {
+        padding: 0;
+        margin: 0;
+        background-color: #C4DDFF;
+    }
+    .container-custom {
+        padding: 0;
+        margin: 0;
+        width: 100%;
+        height: 100vh;
+    }
+    .container-custom .logout {
+        position: fixed;
+        right: -3.8rem;
+        bottom: 3rem;
+        background-color: #2b58c0;
+        border-radius: 5px 0 0px 5px;
+        transition: ease 200ms;
+    }
+    .container-custom .logout i {
+        color: whitesmoke;
+        font-size: large;
+        padding: .5rem;
+    }
+    .container-custom .logout a {
+        color: whitesmoke;
+        font-size: large;
+        padding-right: 5px;
+    }
+    .container-custom .logout:hover {
+        right: 0;
+    }
+    .container-custom .navbar-custom {
+        padding: 1rem 0;
+        background-color: #001D6E;
+        width: 100%;
+        color: whitesmoke;
+    }
+    .container-custom .navbar-custom h3 {
+        font-family: 'Grape Nuts', cursive;
+        font-size: x-large;
+    }
+    .h2 {
+        font-family: 'Oxygen', sans-serif;
+        margin-left: 2.5rem;
+        margin-top: 1rem;
+    }
+    .table-user {
+        padding: 1rem;
+        margin: 1% 1.5%;
+    }
+    .display-none {
+        display: none;
+    }
+    .table-user .tbl {
+        text-align: center;
+    }
+    .table-user .tbl .custom-card {
+        display: inline-flex;
+        border-radius: 5px;
+        transition: 200ms ease;
+        margin: 10px;
+        background: #ffff;
+        width: 17.5rem;
+        height: 15rem;
+        cursor: pointer;
+    }
+    .table-user .tbl .custom-card .number {
+        /* position: absolute;
+        margin-top: 10%; */
+        width: 100%;
+        font-size: xx-large;
+        /* background: #000; */
+        margin-top: 6rem;
+    }
+    .table-user .tbl .custom-card:hover {
+        background: #2b58c0;
+        color: whitesmoke;
+    }
+</style>
+<div class="container-custom">
+    <div class="logout"><i class='fas fa-angle-left'></i><a href="/log/out">Logout</a></div>
+    <div class="navbar-custom">
+        <center><h3>Grafika Cafe</h3></center>
+    </div>
+    <!-- <h2 class="h2">Halo, <%= //actor.username %>!</h2> -->
+
+    <div class="alert">
+        <%- include('./../../partials/message.ejs') %>
+    </div>
+    <div class="table-user">
+        <div class="tbl">
+            <% data.tbl.forEach(x => { %>
+                <div class="custom-card" data-id="<%= x.id %>" data-toggle="modal" data-target="#staticBackdrop">
+                    <div class="number"><%= x.number %></div>
+                    <% bill.forEach(y => { %>
+                        <% if( x.id == y.tbl ) { %>
+                            <div class="data" data-transactionid="<%= y.id %>">
+                                <% data.transaction.forEach(z => { %>
+                                    <% if( y.id == z.id ) { %>
+                                        <% z.data.forEach(xy => { %>
+                                            <div class="in-data" data-menuid="<%= xy.menu %>" data-qty="<%= xy.qty %>"></div>
+                                        <% }) %>
+                                    <% } %>
+                                <% }) %>
+                            </div>
+                        <% } %>
+                    <% }) %>
+                </div>
+            <% }) %>
+        </div>
+    </div>
+    <div class="modal" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+          <div class="modal-content" style="width: 150%; overflow-y: scroll;">
+            <div class="modal-header">
+              <h5 class="modal-title modal-title-custom" id="staticBackdropLabel">Tambah Menu</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <form action="/cashier?action=add" method="POST" id="form-add">
+            <div class="modal-body modal-body-custom">
+                  <div class="form-group plus">
+                    <div class="row row-target display-none">
+                        <div class="col col-lg-6">
+                            <label for="exampleInputPassword1">Menu</label>
+                            <select name="menu" id="menu" class="form-control menu-input">
+                                <% data.menu.forEach(x => { %>
+                                    <option value="<%= x.id %>" data-price="<%= x.price %>" class="opt"><%= x.name %></option>
+                                <% }) %>
+                            </select>
+                        </div>
+                        <div class="col col-lg-2">
+                            <label for="exampleInputPassword1">QTY</label>
+                            <input type="text" name="qty" class="form-control qty" id="qty">
+                        </div>
+                        <div class="col col-lg-4">
+                            <div class="cls" style="position: absolute; right: 1px; bottom: 7px; cursor: pointer;">&times;</div>
+                            <label for="exampleInputPassword1">Harga</label>
+                            <input type="text" name="price1" class="form-control price1" id="price1" readonly>
+                            <input type="text" name="price" class="form-control price" id="price" style="display: none;">
+                        </div>
+                    </div>
+                    <div class="row row-target">
+                        <div class="col col-lg-6">
+                            <label for="exampleInputPassword1">Menu</label>
+                            <select name="menu" id="menu" class="form-control menu-input">
+                                <% data.menu.forEach(x => { %>
+                                    <option value="<%= x.id %>" data-price="<%= x.price %>" class="opt"><%= x.name %></option>
+                                <% }) %>
+                            </select>
+                        </div>
+                        <div class="col col-lg-2">
+                            <label for="exampleInputPassword1">QTY</label>
+                            <input type="text" name="qty" class="form-control qty" id="qty">
+                        </div>
+                        <div class="col col-lg-4">
+                            <label for="exampleInputPassword1">Harga</label>
+                            <input type="text" name="price1" class="form-control price1" id="price1" readonly>
+                            <input type="text" name="price" class="form-control price" id="price" style="display: none;">
+                        </div>
+                    </div>
+                  </div>
+                  <button type="button" class="btn btn-primary tambah" style="width: 100%;">Tambah</button>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary cls-btn-mdl" data-dismiss="modal">Tutup</button>
+                    <button type="submit" class="btn btn-primary sbm-btn-mdl" style="background-color: #2b58c0;">Simpan</button>
+                </div>
+            </form>
+          </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let plus = document.querySelector('.plus')
+    let constan_plus = plus.innerHTML
+    document.querySelector('.logout').addEventListener('click', function(e) {
+        this.innerHTML += ``
+    })
+
+    let getUnpaidBill = x => {
+        let chl = x.lastElementChild.children
+        let cnt = plus.lastElementChild
+        let fnl = ``
+
+        for( let i = 0; i < chl.length; i++ ) {
+            for( let a = 0; a < cnt.firstElementChild.lastElementChild.childElementCount; a++ ) {
+                if( chl[i].dataset.menuid == cnt.firstElementChild.lastElementChild.children[a].value ) {
+                    cnt.firstElementChild.lastElementChild.children[a].setAttribute('selected', '')
+                    cnt.firstElementChild.nextElementSibling.lastElementChild.value = chl[i].dataset.qty
+                    fnl += cnt.outerHTML
+                }
+            }z
+        }
+        plus.lastElementChild.remove()
+        plus.innerHTML += fnl
+        getMenuPrice()
+    }
+
+    let getMenuPrice = () => {
+        document.querySelectorAll('.qty').forEach(x => {
+            x.addEventListener('keyup', function(e) {
+                let qty = this.value
+                let slc = x.parentElement.previousElementSibling.lastElementChild
+                let trg1 = x.parentElement.nextElementSibling.lastElementChild
+                let trg2 = x.parentElement.nextElementSibling.lastElementChild.previousElementSibling
+                let price
+                for( let i = 0; i < slc.childElementCount; i++ ) {
+                    if( slc.value == slc.children[i].value ) {
+                        price = slc.children[i].dataset.price
+                    }
+                }
+                console.log(isNaN(qty))
+                if( isNaN(qty) == true ) return this.value = ''
+                if( qty == '' ) qty = 0
+                trg1.value = parseInt(qty) * parseInt(price)
+                trg2.value = parseInt(qty) * parseInt(price)
+            })
+        })
+    }
+    getMenuPrice()
+
+    document.querySelectorAll('.custom-card').forEach(x => {
+        if( x.lastElementChild.classList.contains('data') ) {
+            x.style.background = '#2b58c0'
+            x.style.color = '#ffff'
+        }
+        x.addEventListener('click', function(e) {
+            document.querySelector('#form-add').setAttribute('action', `/cashier?action=add&tbl=${x.dataset.id}`)
+            if( x.lastElementChild.classList.contains('data') ) {
+                document.querySelector('#form-add').setAttribute('action', '/cashier?action=pay&transaction=' + x.lastElementChild.dataset.transactionid)
+                document.querySelector('.sbm-btn-mdl').innerText = 'Bayar'
+                getUnpaidBill(x)
+            }
+            document.querySelector('.modal-title-custom').innerText = `Pesanan Meja Nomor ${x.firstElementChild.innerText}`
+        })
+    })
+    
+    document.querySelector('.tambah').addEventListener('click', function(e) {
+        let slcd, qty, prc, prc1
+        for( let i = 0; i < plus.childElementCount; i++ ) {
+            slcd = plus.children[i].firstElementChild.lastElementChild.value
+        }
+        for( let i = 0; i < plus.childElementCount; i++ ) {
+            qty = plus.children[i].firstElementChild.nextElementSibling.lastElementChild.value
+        }
+        for( let i = 0; i < plus.childElementCount; i++ ) {
+            prc = plus.children[i].lastElementChild.lastElementChild.value
+        }
+        for( let i = 0; i < plus.childElementCount; i++ ) {
+            prc1 = plus.children[i].lastElementChild.lastElementChild.previousElementSibling.value
+        }
+        plus.lastElementChild.outerHTML += plus.firstElementChild.outerHTML
+        plus.lastElementChild.classList.remove('display-none')
+        
+        for( let a = 0; a < plus.children[plus.childElementCount - 2].firstElementChild.lastElementChild.childElementCount; a++ ) {
+            if( plus.children[plus.childElementCount - 2].firstElementChild.lastElementChild.children[a].value == slcd ) {
+                plus.children[plus.childElementCount - 2].firstElementChild.lastElementChild.children[a].setAttribute('selected', '')
+            }
+        }
+        plus.children[plus.childElementCount - 2].firstElementChild.nextElementSibling.lastElementChild.value = qty
+        plus.children[plus.childElementCount - 2].lastElementChild.lastElementChild.previousElementSibling.value = prc
+        plus.children[plus.childElementCount - 2].lastElementChild.lastElementChild.value = prc1
+        document.querySelectorAll('.cls').forEach(x => {
+            x.addEventListener('click', function(e) {
+                x.parentElement.parentElement.remove()
+            })
+            getMenuPrice()
+        })
+    })
+
+    document.querySelectorAll('.cls-btn-mdl').forEach(x => {
+        x.addEventListener('click', function(e) {
+            plus.innerHTML = constan_plus
+            getMenuPrice()
+        })
+    })
+</script>

@@ -1,0 +1,33 @@
+<style>
+    .msg {
+        transition: ease-in-out 600ms;
+    }
+</style>
+
+<% if( success_message !='' ) { %>
+    <div class="msg alert alert-success text-center" role="alert" style="color: green; cursor: pointer;"
+        onclick="(setTimeout(() => this.remove(), 100))">
+        <%= success_message %>
+    </div>
+    <% } %>
+
+        <% if( error_message !='' ) { %>
+            <div class="msg alert alert-danger text-center" role="alert" style="color: red; cursor: pointer;"
+                onclick="(setTimeout(() => this.remove(), 100))">
+                <%= error_message %>
+            </div>
+            <% } %>
+
+                <% if( warning_message !='' ) { %>
+                    <div class="msg alert alert-warning text-center" style="color: yellow; cursor: pointer;" role="alert"
+                        onclick="(setTimeout(() => this.remove(), 100))">
+                        <%= warning_message %>
+                    </div>
+                    <% } %>
+
+<script>
+    document.querySelectorAll('.msg').forEach(x => {
+        setTimeout(() => x.style.opacity = 0, 2800)
+        setTimeout(() => x.remove(), 3500)
+    })
+</script>
